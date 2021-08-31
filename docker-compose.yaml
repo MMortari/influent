@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  database:
+    container_name: influent-postgres
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=prudentte
