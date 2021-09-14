@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
-
 import CreateUserService from '../services/CreateUserService';
+import SearchUserService from '../services/SearchUserService';
+
+const prisma = new PrismaClient();
 
 class UserControllers {
   async list(req: Request, res: Response): Promise<Response> {
@@ -26,6 +27,27 @@ class UserControllers {
     const service = new CreateUserService();
 
     const response = await service.execute(req.body);
+
+    return res.status(201).json(response);
+  }
+  async searchUser(req: Request, res: Response): Promise<Response> {
+    const { type } = req.params;
+    const { page, pageSize, follower, social_network, interest } = req.query as { [a: string]: any };
+
+    const service = new SearchUserService();
+
+    const response = await service.execute({
+      type,
+      filters: {
+        follower,
+        social_network,
+        interest,
+      },
+      pagination: {
+        page,
+        pageSize,
+      },
+    });
 
     return res.status(201).json(response);
   }
