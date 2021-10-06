@@ -12,17 +12,20 @@ generator client {
 
 model User {
   id            Int             @id @default(autoincrement())
-  fistName     String
-  lastName     String
+  fistName      String
+  lastName      String
   email         String
   username      String
-  password_hash String
+  passwordHash String
   type          String
+
   UserInterest  UserInterest[]
   SocialNetwork SocialNetwork[]
-  ProjectBy     Project[]       @relation("ProjectBy")
-  ProjectFrom   Project[]       @relation("ProjectFrom")
-  Propouse      Propouse[]
+  ProjectAsInfluencer     Project[]       @relation("ProjectAsInfluencer")
+  ProjectAsCompany   Project[]       @relation("ProjectAsCompany")
+  ProposalAsInfluencer      Proposal[] @relation("ProposalAsInfluencer")
+  ProposalAsCompany      Proposal[] @relation("ProposalAsCompany")
+  // Negotiations      ProposalNegotiation[]
 }
 
 model SocialNetwork {
@@ -52,22 +55,54 @@ model UserInterest {
 
 model Project {
   id           Int      @id @default(autoincrement())
-  userIdBy   Int
-  userIdFrom Int
+  influencerId Int
+  companyId Int
+  contractProvider String
   createdAt    DateTime @default(now())
 
-  ProjectBy   User @relation("ProjectBy", fields: [userIdBy], references: [id])
-  ProjectFrom User @relation("ProjectFrom", fields: [userIdFrom], references: [id])
+  influencerDelivery String
+  companyDelivery String?
+  influencerPayment String
+
+  influencer   User @relation("ProjectAsInfluencer", fields: [influencerId], references: [id])
+  company User @relation("ProjectAsCompany", fields: [companyId], references: [id])
 }
 
-model Propouse {
+model Proposal {
   id        Int @id @default(autoincrement())
+
   message String
+  influencerId Int
+  companyId Int
+  createdAt    DateTime @default(now())
+  status ProposalStatus @default(IN_NEGOCIATION)
+
+  influencer User @relation("ProposalAsInfluencer", fields: [influencerId], references: [id])
+  company User @relation("ProposalAsCompany", fields: [companyId], references: [id])
+  negotiations ProposalNegotiation[]
+}
+
+enum ProposalStatus {
+  IN_NEGOCIATION
+  WAITING_CREATE_PROJECT
+  REPROVED
+  APPROVED
+}
+
+model ProposalNegotiation {
+  id Int @id @default(autoincrement())
+  proposalId Int
+
+  message String?
+  influencerDelivery String
+  companyDelivery String?
+  influencerPayment String
+  approvedByInfluencer Boolean?
+  approvedByCompany Boolean?
+
   createdBy Int
   createdAt    DateTime @default(now())
 
-  approvedUserBy Boolean?
-  approvedUserFrom Boolean?
-
-  user User @relation(fields: [createdBy], references: [id])
+  proposal Proposal @relation(fields: [proposalId], references: [id])
+  // user User @relation(fields: [createdBy], references: [id]);
 }

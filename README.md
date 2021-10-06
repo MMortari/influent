@@ -7,7 +7,7 @@
 - [x] Buscador de Cliente
 - [x] Buscador de Influenciador
 - [x] Acessar Perfil
-- [ ] Solicitação de Proposta
-- [ ] Negociação da proposta
-- [ ] Consolidação de Proposta
+- [x] Solicitação de Proposta
+- [x] Negociação da proposta
+- [x] Consolidação de Proposta
 - [ ] Feedback de Jobs
