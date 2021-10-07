@@ -1,4 +1,4 @@
-import { compare, hash } from 'bcrypt';
+// import { compare, hash } from 'bcrypt';
 
 export default class Password {
   /**
@@ -7,7 +7,8 @@ export default class Password {
    * @returns Hashed password
    */
   static async generatePassword(senha: string): Promise<string> {
-    return hash(senha, 8);
+    return senha;
+    // return hash(senha, 8);
   }
 
   /**
@@ -15,12 +16,13 @@ export default class Password {
    * @param hash Password as has
    */
   static async comparePassword(senha: string, hash: string): Promise<boolean> {
-    try {
-      const comparated_passwords = await compare(senha, hash);
+    return senha === hash;
+    // try {
+    //   const comparated_passwords = await compare(senha, hash);
 
-      return comparated_passwords;
-    } catch (err) {
-      return false;
-    }
+    //   return comparated_passwords;
+    // } catch (err) {
+    //   return false;
+    // }
   }
 }

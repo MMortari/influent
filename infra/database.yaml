@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: influent-database-depl
+  labels:
+    app: influent-database-depl
+
+spec:
+  selector:
+    matchLabels:
+      app: influent-database-depl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: influent-database-depl
+    spec:
+      containers:
+        - name: influent-database-depl
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: 'docker'
+            - name: POSTGRES_DB
+              value: 'prudentte'
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '50m'
+            limits:
+              memory: '256Mi'
+              cpu: '500m'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influent-database-service
+  labels:
+    app: influent-database-depl
+spec:
+  type: ClusterIP
+  selector:
+    app: influent-database-depl
+  ports:
+    - protocol: TCP
+      name: http
+      port: 5432
+      targetPort: 5432

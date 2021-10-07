@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  name: influent-depl
+  labels:
+    app: influent-depl
+
+spec:
+  selector:
+    matchLabels:
+      app: influent-depl
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: influent-depl
+    spec:
+      containers:
+        - name: influent-depl
+          image: bmortari/influent:latest
+          ports:
+            - containerPort: 3333
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '50m'
+            limits:
+              memory: '256Mi'
+              cpu: '500m'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: influent-service
+  labels:
+    app: influent-depl
+spec:
+  type: LoadBalancer
+  selector:
+    app: influent-depl
+  ports:
+    - protocol: TCP
+      name: http
+      port: 3333
+      targetPort: 3333

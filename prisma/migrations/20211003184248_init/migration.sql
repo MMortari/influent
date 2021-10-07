@@ -51,7 +51,7 @@ CREATE TABLE "Project" (
 );
 
 -- CreateTable
-CREATE TABLE "Propouse" (
+CREATE TABLE "Proposal" (
     "id" SERIAL NOT NULL,
     "message" TEXT NOT NULL,
     "createdBy" INTEGER NOT NULL,
@@ -78,4 +78,4 @@ ALTER TABLE "Project" ADD FOREIGN KEY ("userIdBy") REFERENCES "User"("id") ON DE
 ALTER TABLE "Project" ADD FOREIGN KEY ("userIdFrom") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Propouse" ADD FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Proposal" ADD FOREIGN KEY ("createdBy") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

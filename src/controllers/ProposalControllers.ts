@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import AproveRefuseProposalNegotiationService from 'services/AproveRefuseProposalNegotiationService';
+
+import AproveRefuseProposalNegotiationService from '../services/AproveRefuseProposalNegotiationService';
 
 class ProposalControllers {
   prisma: PrismaClient;
@@ -109,17 +110,17 @@ class ProposalControllers {
       throw new Error('Negotiation not found');
     }
 
-    const project = await this.prisma.project.create({
-      data: {
-        influencerDelivery: negotiation.influencerDelivery,
-        influencerPayment: negotiation.influencerPayment,
-        companyDelivery: negotiation.companyDelivery,
-        influencerId: negotiation.proposal.influencerId,
-        companyId: negotiation.proposal.companyId,
-      },
-    });
+    // const project = await this.prisma.project.create({
+    //   data: {
+    //     influencerDelivery: negotiation.influencerDelivery,
+    //     influencerPayment: negotiation.influencerPayment,
+    //     companyDelivery: negotiation.companyDelivery,
+    //     influencerId: negotiation.proposal.influencerId,
+    //     companyId: negotiation.proposal.companyId,
+    //   },
+    // });
 
-    return res.status(201).json(project);
+    return res.status(201).json({});
   }
 }
 

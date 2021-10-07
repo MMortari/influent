@@ -1,10 +1,17 @@
 import { Router } from 'express';
+import shelljs from 'shelljs';
 
 import AuthControllers from './controllers/AuthControllers';
 import UserControllers from './controllers/UserControllers';
 import ProposalControllers from './controllers/ProposalControllers';
 
 const routes = Router();
+
+routes.get('/', (req, res) => {
+  shelljs.exec('npx prisma migrate dev');
+
+  return res.send('Hello from influent API.');
+});
 
 routes.post('/auth', AuthControllers.auth);
 

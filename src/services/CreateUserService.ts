@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export default class CreateUserService {
   async execute(data: Request): Promise<Response> {
-    const password_hash = await Password.generatePassword(data.user.password);
+    const passwordHash = await Password.generatePassword(data.user.password);
 
     const user = await prisma.user.create({
       data: {
@@ -14,7 +14,7 @@ export default class CreateUserService {
         lastName: data.user.lastName,
         email: data.user.email,
         username: data.user.username,
-        password_hash,
+        passwordHash,
         type: data.user.type,
         UserInterest: {
           createMany: {

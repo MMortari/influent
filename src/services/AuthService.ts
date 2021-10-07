@@ -21,7 +21,7 @@ export default class AuthService {
       };
     }
 
-    const verify = Password.comparePassword(password, user.password_hash);
+    const verify = Password.comparePassword(password, user.passwordHash);
 
     if (!verify) {
       return {
