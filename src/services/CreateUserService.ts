@@ -12,13 +12,15 @@ export default class CreateUserService {
 
     const user = await prisma.user.create({
       data: {
-        fistName: data.user.fistName,
+        firstName: data.user.firstName,
         lastName: data.user.lastName,
         email: data.user.email,
         username: data.user.username,
         passwordHash,
         type: data.user.type,
         interests: data.user.interests,
+        background_img_url: data.user.background_img_url,
+        profile_img_url: data.user.profile_img_url,
         SocialNetwork: {
           createMany: {
             data: data.socialNetwork,

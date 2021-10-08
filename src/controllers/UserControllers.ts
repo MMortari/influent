@@ -19,6 +19,9 @@ class UserControllers {
       where: {
         id: Number(id),
       },
+      include: {
+        SocialNetwork: true,
+      },
     });
 
     return res.status(200).json(response);

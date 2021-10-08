@@ -12,13 +12,15 @@ generator client {
 
 model User {
   id            Int             @id @default(autoincrement())
-  fistName      String
+  firstName      String
   lastName      String
   email         String
   username      String
   passwordHash String
   type          TypeUser
   interests Interest[]
+  profile_img_url String
+  background_img_url String
 
   // UserInterest  UserInterest[]
   SocialNetwork SocialNetwork[]

@@ -10,13 +10,15 @@ CREATE TYPE "ProposalStatus" AS ENUM ('IN_NEGOCIATION', 'WAITING_CREATE_PROJECT'
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "fistName" TEXT NOT NULL,
+    "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "type" "TypeUser" NOT NULL,
     "interests" "Interest"[],
+    "profile_img_url" TEXT NOT NULL,
+    "background_img_url" TEXT NOT NULL,
 
     PRIMARY KEY ("id")
 );

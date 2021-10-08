@@ -11,3 +11,27 @@
 - [x] Negociação da proposta
 - [x] Consolidação de Proposta
 - [ ] Feedback de Jobs
+
+## Commands
+
+**Database**
+
+```sh
+$ yarn prisma generate
+
+$ yarn prisma migrate dev --name init
+```
+
+**Docker**
+
+```sh
+$ docker build -t bmortari/influent .
+
+$ docker push bmortari/influent:latest
+```
+
+**Kubernetes**
+
+```sh
+$ docker build -t bmortari/influent .
+```
