@@ -3,15 +3,11 @@ import { PrismaClient } from '@prisma/client';
 
 import AproveRefuseProposalNegotiationService from '../services/AproveRefuseProposalNegotiationService';
 
+const prisma = new PrismaClient();
+
 class ProposalControllers {
-  prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
-
   async list(req: Request, res: Response): Promise<Response> {
-    const proposals = await this.prisma.proposal.findMany();
+    const proposals = await prisma.proposal.findMany();
 
     return res.json(proposals);
   }
@@ -19,7 +15,7 @@ class ProposalControllers {
   async info(req: Request, res: Response): Promise<Response> {
     const { id_proposal } = req.params;
 
-    const proposal = await this.prisma.proposal.findUnique({
+    const proposal = await prisma.proposal.findUnique({
       where: {
         id: Number(id_proposal),
       },
@@ -36,7 +32,7 @@ class ProposalControllers {
   async createNew(req: Request, res: Response): Promise<Response> {
     const { influencerId, companyId, message, influencerDelivery, influencerPayment, companyDelivery } = req.body;
 
-    const proposal = await this.prisma.proposal.create({
+    const proposal = await prisma.proposal.create({
       data: {
         message,
         influencerId: Number(influencerId),
@@ -81,7 +77,7 @@ class ProposalControllers {
     const { id_proposal } = req.params;
     const { userId, influencerDelivery, influencerPayment, companyDelivery } = req.body;
 
-    const negotiation = this.prisma.proposalNegotiation.create({
+    const negotiation = await prisma.proposalNegotiation.create({
       data: {
         proposalId: Number(id_proposal),
         createdBy: userId,
@@ -97,7 +93,7 @@ class ProposalControllers {
   async finishProposal(req: Request, res: Response): Promise<Response> {
     const { id_negotiation } = req.params;
 
-    const negotiation = await this.prisma.proposalNegotiation.findUnique({
+    const negotiation = await prisma.proposalNegotiation.findUnique({
       where: {
         id: Number(id_negotiation),
       },
@@ -110,17 +106,18 @@ class ProposalControllers {
       throw new Error('Negotiation not found');
     }
 
-    // const project = await this.prisma.project.create({
-    //   data: {
-    //     influencerDelivery: negotiation.influencerDelivery,
-    //     influencerPayment: negotiation.influencerPayment,
-    //     companyDelivery: negotiation.companyDelivery,
-    //     influencerId: negotiation.proposal.influencerId,
-    //     companyId: negotiation.proposal.companyId,
-    //   },
-    // });
+    const project = await prisma.project.create({
+      data: {
+        contractProvider: 'Clicksign',
+        influencerDelivery: negotiation.influencerDelivery,
+        influencerPayment: negotiation.influencerPayment,
+        companyDelivery: negotiation.companyDelivery,
+        influencerId: negotiation.proposal.influencerId,
+        companyId: negotiation.proposal.companyId,
+      },
+    });
 
-    return res.status(201).json({});
+    return res.status(201).json(project);
   }
 }
 

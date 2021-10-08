@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, TypeUser } from '@prisma/client';
 
 import CreateUserService from '../services/CreateUserService';
 import SearchUserService from '../services/SearchUserService';
@@ -37,7 +37,7 @@ class UserControllers {
     const service = new SearchUserService();
 
     const response = await service.execute({
-      type,
+      type: type as TypeUser,
       filters: {
         follower,
         social_network,

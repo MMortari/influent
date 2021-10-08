@@ -1,4 +1,4 @@
-import { PrismaClient, User } from '@prisma/client';
+import { PrismaClient, User, SocialNetwork } from '@prisma/client';
 
 import Password from '../providers/Password';
 
@@ -6,6 +6,8 @@ const prisma = new PrismaClient();
 
 export default class CreateUserService {
   async execute(data: Request): Promise<Response> {
+    console.log(data);
+
     const passwordHash = await Password.generatePassword(data.user.password);
 
     const user = await prisma.user.create({
@@ -16,14 +18,10 @@ export default class CreateUserService {
         username: data.user.username,
         passwordHash,
         type: data.user.type,
-        UserInterest: {
-          createMany: {
-            data: data.interests.map((item) => ({ interestId: item })),
-          },
-        },
+        interests: data.user.interests,
         SocialNetwork: {
           createMany: {
-            data: data.socialNetworkUsername,
+            data: data.socialNetwork,
           },
         },
       },
@@ -39,8 +37,7 @@ export default class CreateUserService {
 
 export type Request = {
   user: UserDTO;
-  interests: number[];
-  socialNetworkUsername: any[];
+  socialNetwork: SocialNetworkDTO[];
 };
 export type Response = {
   success: boolean;
@@ -48,6 +45,7 @@ export type Response = {
   userId: number;
 };
 
+export type SocialNetworkDTO = Omit<SocialNetwork, 'id' | 'userId'>;
 export type UserDTO = Omit<User, 'id' | 'password_hash'> & {
   password: string;
 };

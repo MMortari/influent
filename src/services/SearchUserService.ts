@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Interest, TypeUser } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -7,6 +7,11 @@ export default class SearchUserService {
     const { page, pageSize } = pagination;
 
     const followers_filter = filters.follower ? [filters.follower - 1000, filters.follower + 1000] : undefined;
+    const interests_filter = filters.interest
+      ? {
+          has: filters.interest,
+        }
+      : undefined;
 
     const search = await prisma.user.findMany({
       where: {
@@ -16,16 +21,14 @@ export default class SearchUserService {
             followers: {
               in: followers_filter,
             },
-            id: filters.social_network,
+            id: {
+              equals: filters.social_network,
+            },
           },
         },
-        UserInterest: {
-          some: {
-            interestId: filters.interest,
-          },
-        },
+        interests: interests_filter,
       },
-      skip: (page - 1) * pageSize,
+      skip: page && pageSize ? (page - 1) * pageSize : undefined,
       take: pageSize,
     });
 
@@ -38,7 +41,7 @@ export default class SearchUserService {
 }
 
 export type Request = {
-  type: string;
+  type: TypeUser;
 
   pagination: {
     page: number;
@@ -47,7 +50,7 @@ export type Request = {
   filters: {
     follower?: number;
     social_network?: number;
-    interest?: number;
+    interest?: Interest;
   };
 };
 export type Response = {

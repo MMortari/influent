@@ -17,9 +17,10 @@ model User {
   email         String
   username      String
   passwordHash String
-  type          String
+  type          TypeUser
+  interests Interest[]
 
-  UserInterest  UserInterest[]
+  // UserInterest  UserInterest[]
   SocialNetwork SocialNetwork[]
   ProjectAsInfluencer     Project[]       @relation("ProjectAsInfluencer")
   ProjectAsCompany   Project[]       @relation("ProjectAsCompany")
@@ -28,30 +29,44 @@ model User {
   // Negotiations      ProposalNegotiation[]
 }
 
+enum TypeUser {
+  INFLUENCER
+  COMPANY
+}
+
+enum Interest {
+  CARRO
+  ANIMAL
+  VIAGEM
+  TECNOLOGIA
+  MUSICA
+  JOGOS
+}
+
 model SocialNetwork {
   id        Int     @id @default(autoincrement())
   userId   Int
   name      String
   username  String
-  followers Int
+  followers Int?
   main      Boolean
   user      User    @relation(fields: [userId], references: [id])
 }
 
-model Interest {
-  id           Int            @id @default(autoincrement())
-  name         String
-  UserInterest UserInterest[]
-}
+// model Interest {
+//   id           Int            @id @default(autoincrement())
+//   name         String
+//   UserInterest UserInterest[]
+// }
 
-model UserInterest {
-  id          Int @id @default(autoincrement())
-  interestId Int
-  userId     Int
+// model UserInterest {
+//   id          Int @id @default(autoincrement())
+//   interestId Int
+//   userId     Int
 
-  interest Interest @relation(fields: [interestId], references: [id])
-  user     User     @relation(fields: [userId], references: [id])
-}
+//   interest Interest @relation(fields: [interestId], references: [id])
+//   user     User     @relation(fields: [userId], references: [id])
+// }
 
 model Project {
   id           Int      @id @default(autoincrement())

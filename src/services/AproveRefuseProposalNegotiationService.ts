@@ -5,7 +5,7 @@ export default class AproveRefuseProposalNegotiationService {
 
   async execute({ aproval, id_negotiation, type }: Request): Promise<Response> {
     const data =
-      type === 'influencer'
+      type === 'INFLUENCER'
         ? {
             approvedByInfluencer: aproval,
           }
@@ -20,9 +20,10 @@ export default class AproveRefuseProposalNegotiationService {
       data,
     });
 
-    if (aproval) {
+    if (negociation.approvedByCompany && negociation.approvedByInfluencer) {
       await this.approved(negociation);
-    } else {
+    }
+    if (negociation.approvedByCompany === false && negociation.approvedByInfluencer === false) {
       await this.repproved(negociation);
     }
 
@@ -55,7 +56,7 @@ export default class AproveRefuseProposalNegotiationService {
 
 export type Request = {
   id_negotiation: number | string;
-  type: 'influencer' | 'company';
+  type: 'INFLUENCER' | 'COMPANY';
   aproval: boolean;
 };
 export type Response = ProposalNegotiation;
