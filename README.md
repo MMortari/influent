@@ -14,12 +14,16 @@
 
 ## Commands
 
-**Database**
+**Prisma**
 
 ```sh
 $ yarn prisma generate
 
 $ yarn prisma migrate dev --name init
+
+$ yarn prisma migrate dev
+
+$ yarn prisma format
 ```
 
 **Docker**

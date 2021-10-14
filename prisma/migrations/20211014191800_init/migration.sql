@@ -15,6 +15,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
+    "document" TEXT,
     "type" "TypeUser" NOT NULL,
     "interests" "Interest"[],
     "profile_img_url" TEXT NOT NULL,
@@ -36,8 +37,9 @@ CREATE TABLE "SocialNetwork" (
 );
 
 -- CreateTable
-CREATE TABLE "Project" (
+CREATE TABLE "Job" (
     "id" SERIAL NOT NULL,
+    "proposalId" INTEGER NOT NULL,
     "influencerId" INTEGER NOT NULL,
     "companyId" INTEGER NOT NULL,
     "contractProvider" TEXT NOT NULL,
@@ -81,10 +83,13 @@ CREATE TABLE "ProposalNegotiation" (
 ALTER TABLE "SocialNetwork" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD FOREIGN KEY ("influencerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Job" ADD FOREIGN KEY ("proposalId") REFERENCES "Proposal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD FOREIGN KEY ("companyId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Job" ADD FOREIGN KEY ("influencerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Job" ADD FOREIGN KEY ("companyId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Proposal" ADD FOREIGN KEY ("influencerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

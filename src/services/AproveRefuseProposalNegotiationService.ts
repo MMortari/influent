@@ -34,7 +34,7 @@ export default class AproveRefuseProposalNegotiationService {
     if (negociation.approvedByCompany && negociation.approvedByInfluencer) {
       await this.prisma.proposal.update({
         where: {
-          id: negociation.id,
+          id: negociation.proposalId,
         },
         data: {
           status: 'WAITING_CREATE_PROJECT',
@@ -45,7 +45,7 @@ export default class AproveRefuseProposalNegotiationService {
   private async repproved(negociation: ProposalNegotiation) {
     await this.prisma.proposal.update({
       where: {
-        id: negociation.id,
+        id: negociation.proposalId,
       },
       data: {
         status: 'REPROVED',

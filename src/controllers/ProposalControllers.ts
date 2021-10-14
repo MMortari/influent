@@ -106,8 +106,13 @@ class ProposalControllers {
       throw new Error('Negotiation not found');
     }
 
-    const project = await prisma.project.create({
+    if (!negotiation.approvedByCompany && !negotiation.approvedByInfluencer) {
+      throw new Error('Proposal not approved');
+    }
+
+    const job = await prisma.job.create({
       data: {
+        proposalId: negotiation.proposalId,
         contractProvider: 'Clicksign',
         influencerDelivery: negotiation.influencerDelivery,
         influencerPayment: negotiation.influencerPayment,
@@ -117,7 +122,7 @@ class ProposalControllers {
       },
     });
 
-    return res.status(201).json(project);
+    return res.status(201).json(job);
   }
 }
 

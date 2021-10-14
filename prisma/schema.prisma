@@ -11,23 +11,24 @@ generator client {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  firstName      String
-  lastName      String
-  email         String
-  username      String
-  passwordHash String
-  type          TypeUser
-  interests Interest[]
-  profile_img_url String
+  id                 Int        @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  email              String
+  username           String
+  passwordHash       String
+  document           String?
+  type               TypeUser
+  interests          Interest[]
+  profile_img_url    String
   background_img_url String
 
   // UserInterest  UserInterest[]
-  SocialNetwork SocialNetwork[]
-  ProjectAsInfluencer     Project[]       @relation("ProjectAsInfluencer")
-  ProjectAsCompany   Project[]       @relation("ProjectAsCompany")
-  ProposalAsInfluencer      Proposal[] @relation("ProposalAsInfluencer")
-  ProposalAsCompany      Proposal[] @relation("ProposalAsCompany")
+  socialNetwork        SocialNetwork[]
+  projectAsInfluencer  Job[]           @relation("ProjectAsInfluencer")
+  projectAsCompany     Job[]           @relation("ProjectAsCompany")
+  proposalAsInfluencer Proposal[]      @relation("ProposalAsInfluencer")
+  proposalAsCompany    Proposal[]      @relation("ProposalAsCompany")
   // Negotiations      ProposalNegotiation[]
 }
 
@@ -47,7 +48,7 @@ enum Interest {
 
 model SocialNetwork {
   id        Int     @id @default(autoincrement())
-  userId   Int
+  userId    Int
   name      String
   username  String
   followers Int?
@@ -70,33 +71,36 @@ model SocialNetwork {
 //   user     User     @relation(fields: [userId], references: [id])
 // }
 
-model Project {
-  id           Int      @id @default(autoincrement())
-  influencerId Int
-  companyId Int
+model Job {
+  id               Int      @id @default(autoincrement())
+  proposalId       Int
+  influencerId     Int
+  companyId        Int
   contractProvider String
-  createdAt    DateTime @default(now())
+  createdAt        DateTime @default(now())
 
   influencerDelivery String
-  companyDelivery String?
-  influencerPayment String
+  companyDelivery    String?
+  influencerPayment  String
 
-  influencer   User @relation("ProjectAsInfluencer", fields: [influencerId], references: [id])
-  company User @relation("ProjectAsCompany", fields: [companyId], references: [id])
+  proposal   Proposal @relation(fields: [proposalId], references: [id])
+  influencer User     @relation("ProjectAsInfluencer", fields: [influencerId], references: [id])
+  company    User     @relation("ProjectAsCompany", fields: [companyId], references: [id])
 }
 
 model Proposal {
-  id        Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  message String
+  message      String
   influencerId Int
-  companyId Int
-  createdAt    DateTime @default(now())
-  status ProposalStatus @default(IN_NEGOCIATION)
+  companyId    Int
+  createdAt    DateTime       @default(now())
+  status       ProposalStatus @default(IN_NEGOCIATION)
 
-  influencer User @relation("ProposalAsInfluencer", fields: [influencerId], references: [id])
-  company User @relation("ProposalAsCompany", fields: [companyId], references: [id])
+  influencer   User                  @relation("ProposalAsInfluencer", fields: [influencerId], references: [id])
+  company      User                  @relation("ProposalAsCompany", fields: [companyId], references: [id])
   negotiations ProposalNegotiation[]
+  job          Job[]
 }
 
 enum ProposalStatus {
@@ -107,18 +111,18 @@ enum ProposalStatus {
 }
 
 model ProposalNegotiation {
-  id Int @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
   proposalId Int
 
-  message String?
-  influencerDelivery String
-  companyDelivery String?
-  influencerPayment String
+  message              String?
+  influencerDelivery   String
+  companyDelivery      String?
+  influencerPayment    String
   approvedByInfluencer Boolean?
-  approvedByCompany Boolean?
+  approvedByCompany    Boolean?
 
   createdBy Int
-  createdAt    DateTime @default(now())
+  createdAt DateTime @default(now())
 
   proposal Proposal @relation(fields: [proposalId], references: [id])
   // user User @relation(fields: [createdBy], references: [id]);

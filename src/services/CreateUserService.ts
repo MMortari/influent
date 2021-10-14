@@ -10,6 +10,18 @@ export default class CreateUserService {
 
     const passwordHash = await Password.generatePassword(data.user.password);
 
+    if (data.user.type === 'INFLUENCER' && !data.socialNetwork) {
+      throw new Error('Is require to have socialNetwork on influencer');
+    }
+
+    const socialNetwork = data.socialNetwork
+      ? {
+          createMany: {
+            data: data.socialNetwork,
+          },
+        }
+      : undefined;
+
     const user = await prisma.user.create({
       data: {
         firstName: data.user.firstName,
@@ -18,14 +30,11 @@ export default class CreateUserService {
         username: data.user.username,
         passwordHash,
         type: data.user.type,
+        document: data.user.document,
         interests: data.user.interests,
         background_img_url: data.user.background_img_url,
         profile_img_url: data.user.profile_img_url,
-        SocialNetwork: {
-          createMany: {
-            data: data.socialNetwork,
-          },
-        },
+        socialNetwork,
       },
     });
 
@@ -39,7 +48,7 @@ export default class CreateUserService {
 
 export type Request = {
   user: UserDTO;
-  socialNetwork: SocialNetworkDTO[];
+  socialNetwork?: SocialNetworkDTO[];
 };
 export type Response = {
   success: boolean;

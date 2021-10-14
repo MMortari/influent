@@ -16,7 +16,7 @@ export default class SearchUserService {
     const search = await prisma.user.findMany({
       where: {
         type,
-        SocialNetwork: {
+        socialNetwork: {
           some: {
             followers: {
               in: followers_filter,

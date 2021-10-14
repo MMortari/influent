@@ -12,6 +12,12 @@ routes.get('/', (req, res) => {
 });
 
 routes.get('/migrate', (req, res) => {
+  console.log('Running migration');
+  shelljs.exec('npx prisma migrate dev');
+
+  return res.send('Migrate run successfully');
+});
+routes.get('/migrate/reset', (req, res) => {
   console.log('Reseting database');
   shelljs.exec('npx prisma migrate reset -f');
   console.log('Running migration');
@@ -26,6 +32,8 @@ routes.get('/user', UserControllers.list);
 routes.get('/user/:id', UserControllers.findById);
 routes.post('/user', UserControllers.createUser);
 routes.post('/user/:type/search', UserControllers.searchUser);
+routes.get('/user/:id/proposal', UserControllers.findAllProposal);
+routes.get('/user/:id/job', UserControllers.findAllJob);
 
 routes.get('/proposal', ProposalControllers.list);
 routes.get('/proposal/:id_proposal', ProposalControllers.info);
