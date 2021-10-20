@@ -13,20 +13,18 @@ routes.get('/', (req, res) => {
 
 routes.get('/migrate', (req, res) => {
   console.log('Running migration');
-  shelljs.exec('npx prisma migrate dev');
+  shelljs.exec('npx prisma migrate dev --skip-generate');
 
   return res.send('Migrate run successfully');
 });
 routes.get('/migrate/reset', (req, res) => {
   console.log('Reseting database');
   shelljs.exec('npx prisma migrate reset -f');
-  console.log('Running migration');
-  shelljs.exec('npx prisma migrate dev');
 
   return res.send('Migrate run successfully');
 });
 
-routes.post('/auth', AuthControllers.auth);
+routes.post('/login', AuthControllers.auth);
 
 routes.get('/user', UserControllers.list);
 routes.get('/user/:id', UserControllers.findById);

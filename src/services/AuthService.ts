@@ -7,10 +7,14 @@ import Config from '../config';
 const prisma = new PrismaClient();
 
 export default class AuthService {
-  async execute({ password, email }: Request): Promise<Response> {
+  async execute({ password, username }: Request): Promise<Response> {
+    if (!password || !username) {
+      throw new Error('Password and username is required');
+    }
+
     const user = await prisma.user.findFirst({
       where: {
-        email,
+        username,
       },
     });
 
@@ -44,18 +48,20 @@ export default class AuthService {
       token,
       authenticated: true,
       message: 'User authenticated',
+      user,
     };
   }
 }
 
 export type Request = {
-  email: string;
+  username: string;
   password: string;
 };
 export type Response = {
   token?: string;
   authenticated: boolean;
   message: string;
+  user?: User;
 };
 
 export type UserDTO = Omit<User, 'id' | 'password_hash'> & {

@@ -30,7 +30,26 @@ class ProposalControllers {
   }
 
   async createNew(req: Request, res: Response): Promise<Response> {
-    const { influencerId, companyId, message, influencerDelivery, influencerPayment, companyDelivery } = req.body;
+    const { influencerId, companyId, message, influencerDelivery, influencerPayment, companyDelivery, userId } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const by =
+      user.type === 'INFLUENCER'
+        ? {
+            approvedByInfluencer: true,
+          }
+        : {
+            approvedByCompany: true,
+          };
 
     const proposal = await prisma.proposal.create({
       data: {
@@ -39,10 +58,12 @@ class ProposalControllers {
         companyId: Number(companyId),
         negotiations: {
           create: {
+            message,
             createdBy: companyId,
             influencerDelivery,
             influencerPayment,
             companyDelivery,
+            ...by,
           },
         },
       },
@@ -75,15 +96,36 @@ class ProposalControllers {
 
   async negociationProposal(req: Request, res: Response): Promise<Response> {
     const { id_proposal } = req.params;
-    const { userId, influencerDelivery, influencerPayment, companyDelivery } = req.body;
+    const { userId, message, influencerDelivery, influencerPayment, companyDelivery } = req.body;
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const by =
+      user.type === 'INFLUENCER'
+        ? {
+            approvedByInfluencer: true,
+          }
+        : {
+            approvedByCompany: true,
+          };
 
     const negotiation = await prisma.proposalNegotiation.create({
       data: {
         proposalId: Number(id_proposal),
+        message,
         createdBy: userId,
         influencerDelivery,
         influencerPayment,
         companyDelivery,
+        ...by,
       },
     });
 
