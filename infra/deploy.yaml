@@ -29,6 +29,9 @@ spec:
             limits:
               memory: '256Mi'
               cpu: '500m'
+          envFrom:
+            - configMapRef:
+                name: deploy-configmap
 ---
 apiVersion: v1
 kind: Service
